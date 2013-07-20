@@ -143,6 +143,7 @@ body {
           </p>
 		  <p id="endereco_sob_foto">Avenida Orozimbo Maia, 1264<br>
 		  Campinas - SP</p>
+	  <p align="center" id="state"><small>Carregando status...</small></p>
           <p align="center"><a class="btn" href="javascript:void(0);" onclick="javascript:$('#mapa').modal('show')"><i class="icon-map-marker"></i>Como chegar &raquo;</a></p>
 
 <!--          <p><a class="btn btn-block" href="https://www.noisebridge.net/wiki/Passport"><i class="icon-book"></i>
@@ -214,6 +215,34 @@ body {
           $('#myCarousel').carousel()
         })
       }(window.jQuery)
+      function PollStatus(){
+        var xh;
+        if(window.XMLHttpRequest) xh=new XMLHttpRequest();
+        else xh=new ActiveXObject("Microsoft.XMLHTTP");
+
+        xh.open("GET","http://lhc.net.br/spacenet.json",true);
+        xh.onreadystatechange=function(evt){
+          try{
+            if(xh.readyState!=4) return;
+            if(xh.status!=200){console.log(xh.status);return;}
+            if(xh.responseText[0]!='{'){console.log('wtf');return;}
+            var json=JSON.parse(xh.responseText);
+            var stateDiv=document.getElementById("state");
+            if(json.state.open)
+              stateDiv.innerHTML='<img width=24 src="'+json.state.icon.open+'"> <small>Aberto.</small>';
+            else
+              stateDiv.innerHTML='<img width=24 src="'+json.state.icon.closed+'"> <small>Fechado.</small>';
+          }catch(e){
+            PollStatus();
+          }
+        }
+        try{
+          xh.send(null);
+        }catch(e){
+          PollStatus();
+        }
+      }
+      setInterval(PollStatus,5000);PollStatus();
     </script>
 </body>
 </html>
