@@ -263,6 +263,7 @@ body {
               html+='.</small>';
             }
             stateDiv.innerHTML=html;
+            setTimeout(PollStatus,5000);
           }catch(e){
             PollStatus();
           }
@@ -273,7 +274,7 @@ body {
           PollStatus();
         }
       }
-      setInterval(PollStatus,5000);PollStatus();
+      PollStatus();
     </script>
 </body>
 </html>
