@@ -250,10 +250,19 @@ body {
             if(xh.responseText[0]!='{'){console.log('wtf');return;}
             var json=JSON.parse(xh.responseText);
             var stateDiv=document.getElementById("state");
+            var html;
             if(json.state.open)
-              stateDiv.innerHTML='<img width=24 src="'+json.state.icon.open+'"> <small>Aberto.</small>';
-            else
-              stateDiv.innerHTML='<img width=24 src="'+json.state.icon.closed+'"> <small>Fechado.</small>';
+              html='<img width=24 src="'+json.state.icon.open+'"> <small>Aberto.</small>';
+            else {
+              var date = new Date(json.state.lastchange * 1000);
+              html='<img width=24 src="'+json.state.icon.closed+'">';
+              html+='<small>Fechado desde ';
+              html+=date.getHours() + ':' + date.getMinutes();
+              html+=' do dia ';
+              html+=date.getDate() + '/' + (date.getMonth() + 1);
+              html+='.</small>';
+            }
+            stateDiv.innerHTML=html;
           }catch(e){
             PollStatus();
           }
